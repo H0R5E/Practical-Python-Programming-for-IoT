@@ -29,7 +29,7 @@
 
         $(document).ready(function() {                                        // (6)
             // Event listener for Slider value changes.
-            $("input[type=range].brightnessLevel").on('input', function(){
+            $("input[type=range].brightnessLevel").on('change', function(){
                 level = $(this).val();
                 payload = {"level": level};
                 socket.emit('led', payload);
