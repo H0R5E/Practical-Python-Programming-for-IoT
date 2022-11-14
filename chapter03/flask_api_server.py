@@ -107,4 +107,4 @@ if __name__ == '__main__':
     #
     # Flask GitHub Issue: https://github.com/pallets/flask/issues/3189
 
-    app.run(host="0.0.0.0", debug=True)                                              # (20)
+    app.run(host="0.0.0.0", port=80, debug=True)                                              # (20)
