@@ -18,16 +18,19 @@ from adafruit_ads1x15.analog_in import AnalogIn
 
 # Create the I2C bus & ADS object.
 i2c = busio.I2C(board.SCL, board.SDA)
-ads = ADS.ADS1115(i2c, gain=2)
+ads = ADS.ADS1115(i2c)
+ads.gain = 2 
 
 # Analog Inputs on Channels 0 (A0 on breakout board)
 temp_ch = AnalogIn(ads, ADS.P0)  #ADS.P0 --> A0
 
+
 if __name__ == '__main__':
     try:
         while True:
-            output = ("TMP36 (A0) value={:>5} volts={:>5.3f}")
-            output = output.format(temp_ch.value, temp_ch.voltage)
+            output = ("TMP36 (A0) value={:>5} mvolts={:>5.3f} temp={:5.3f}")
+            output = output.format(temp_ch.value, temp_ch.voltage * 1000,
+                                   (temp_ch.voltage * 1000 - 500) / 10)
 
             print(output)
             sleep(0.05)
