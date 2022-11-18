@@ -13,6 +13,7 @@ import json
 import os
 import sys
 import logging
+from dotenv import dotenv_values, find_dotenv
 from gpiozero import Device, LED
 from gpiozero.pins.pigpio import PiGPIOFactory
 from time import sleep
@@ -22,7 +23,7 @@ import requests                                                                 
 
 # Global Variables
 LED_GPIO_PIN = 21                   # GPIO Pin that LED is connected to
-THING_NAME_FILE = 'thing_name.txt'  # The name of our "thing" is persisted into this file
+THING_NAME_FILE = find_dotenv()     # The name of our "thing" is persisted into this file
 URL = 'https://dweet.io'            # Dweet.io service API
 last_led_state = None               # Current state of LED ("on", "off", "blinking")
 thing_name = None                   # Thing name (as persisted in THING_NAME_FILE)
@@ -49,18 +50,19 @@ def init_led():
 
 def resolve_thing_name(thing_file):
     """Get existing, or create a new thing name"""
-    if os.path.exists(thing_file):                                                 # (3)
-        with open(thing_file, 'r') as file_handle:
-            name = file_handle.read()
+    if thing_file:                                                 # (3)
+        config = dotenv_values(thing_file)
+        if "THING_NAME" in config:
+            name = config["THING_NAME"]
             logger.info('Thing name ' + name + ' loaded from ' + thing_file)
             return name.strip()
     else:
-        name = str(uuid1())[:8]  # UUID object to string.                          # (4)
-        logger.info('Created new thing name ' + name)
-
-        with open(thing_file, 'w') as f:                                           # (5)
-            f.write(name)
-
+        thing_file = pathlib.Path.home() / ".env"
+    
+    name = str(uuid1())[:8]  # UUID object to string.                          # (4)
+    logger.info('Created new thing name ' + name)
+    set_key(thing_file, "THING_NAME", name) 
+    
     return name
 
 

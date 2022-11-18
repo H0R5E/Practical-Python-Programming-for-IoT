@@ -26,7 +26,7 @@ Device.pin_factory = PiGPIOFactory()
 
 # Secrets
 env_path = find_dotenv()
-config = dotenv_values(".env")
+config = dotenv_values(env_path)
 
 BUTTON_GPIO_PIN = 23
 button = None
@@ -36,7 +36,6 @@ current_led_state = 0 # off
 # Make sure thing_name matches the "dweet_led thing" you want to control.
 thing_name = config["THING_NAME"]
 URL = 'https://dweet.io'
-
 
 def init_button():
     """Setup button"""
