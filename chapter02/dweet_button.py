@@ -12,6 +12,7 @@ Built and tested with Python 3.7 on Raspberry Pi 4 Model B
 import signal
 import requests
 import logging
+from dotenv import dotenv_values, find_dotenv
 from gpiozero import Device, Button
 from gpiozero.pins.pigpio import PiGPIOFactory
 
@@ -23,13 +24,17 @@ logger.setLevel(logging.INFO)
 # Initialise GPIOZero
 Device.pin_factory = PiGPIOFactory()
 
+# Secrets
+env_path = find_dotenv()
+config = dotenv_values(".env")
+
 BUTTON_GPIO_PIN = 23
 button = None
 LED_STATES = ['off', 'on', 'blink']
 current_led_state = 0 # off
 
 # Make sure thing_name matches the "dweet_led thing" you want to control.
-thing_name = '**** ADD YOUR THING NAME HERE ****'
+thing_name = config["THING_NAME"]
 URL = 'https://dweet.io'
 
 
